@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>Launch 30 — Get your hands dirty</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sand:#F0E9DB; --card:#FFFFFF; --ink:#1C2B24; --ink-soft:#5A6B61;
+  --green:#176B3A; --green-deep:#0F4A27; --amber:#DFA032; --line:#D8CDB8;
+  --danger:#B0512F;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;background:#F0E9DB;color-scheme:light only}
+body{
+  background:var(--sand) !important; color:var(--ink);
+  min-height:100vh;
+  font-family:'IBM Plex Sans',system-ui,sans-serif;
+  font-size:15.5px; line-height:1.5;
+  padding:20px 14px 80px;
+}
+.wrap{max-width:640px;margin:0 auto}
+a{color:var(--green)}
+
+/* ---------- header ---------- */
+header{margin-bottom:18px}
+.mark{
+  font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.18em;
+  color:var(--green);text-transform:uppercase;margin-bottom:6px;
+}
+h1{
+  font-family:'Space Grotesk',sans-serif;font-weight:700;
+  font-size:clamp(28px,7vw,38px);line-height:1.05;letter-spacing:-.01em;
+}
+h1 em{font-style:normal;color:var(--green)}
+.window{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  margin-top:12px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--ink-soft);
+}
+.chip{
+  background:var(--ink);color:var(--sand);padding:4px 10px;border-radius:99px;
+  font-family:'IBM Plex Mono',monospace;font-size:12px;
+}
+.progress-shell{margin-top:18px}
+.progress-track{
+  height:14px;background:var(--card);border:1.5px solid var(--line);
+  border-radius:99px;overflow:hidden;position:relative;
+}
+.progress-fill{
+  height:100%;width:0%;border-radius:99px;
+  background:linear-gradient(90deg,var(--green) 0%,var(--amber) 100%);
+  transition:width .5s cubic-bezier(.22,1,.36,1);
+}
+.progress-meta{
+  display:flex;justify-content:space-between;margin-top:6px;
+  font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);
+}
+.saved{opacity:0;transition:opacity .3s;color:var(--green);font-weight:500}
+.saved.show{opacity:1}
+.dunes{display:block;width:100%;height:auto;margin:6px 0 14px}
+
+/* ---------- week card ---------- */
+.week{
+  background:var(--card);border:1.5px solid var(--line);border-radius:16px;
+  margin-bottom:16px;overflow:hidden;position:relative;
+  transition:border-color .3s;
+}
+.week.done{border-color:var(--green)}
+.week-head{
+  width:100%;text-align:left;background:none;border:none;cursor:pointer;
+  padding:16px 16px 14px;display:flex;align-items:center;gap:12px;
+  font-family:inherit;color:inherit;
+}
+.week-head:focus-visible{outline:2px solid var(--green);outline-offset:-2px;border-radius:14px}
+.dial{
+  width:44px;height:44px;flex:none;border-radius:50%;
+  display:grid;place-items:center;position:relative;
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--ink);
+  background:conic-gradient(var(--green) calc(var(--p)*1%), #EDE6D6 0);
+}
+.dial::before{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--card)}
+.dial span{position:relative;z-index:1}
+.week-titles{flex:1;min-width:0}
+.eyebrow{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-soft);margin-bottom:2px;
+}
+.week-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;line-height:1.2}
+.caret{flex:none;width:22px;height:22px;color:var(--ink-soft);transition:transform .25s}
+.week.open .caret{transform:rotate(180deg)}
+.week-body{display:none;padding:0 16px 14px}
+.week.open .week-body{display:block}
+
+/* stamp */
+.stamp{
+  position:absolute;top:10px;right:14px;pointer-events:none;
+  transform:rotate(8deg) scale(0);opacity:0;
+  border:2.5px solid var(--green);color:var(--green);border-radius:8px;
+  padding:2px 10px 4px;
+  font-family:'IBM Plex Sans Arabic','IBM Plex Sans',sans-serif;font-weight:600;font-size:15px;
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .3s;
+  background:rgba(255,255,255,.85);
+}
+.week.done .stamp{transform:rotate(8deg) scale(1);opacity:1}
+.stamp small{
+  display:block;font-family:'IBM Plex Mono',monospace;font-size:8.5px;
+  letter-spacing:.16em;text-transform:uppercase;text-align:center;margin-top:-2px;
+}
+
+/* ---------- tasks ---------- */
+.task{border-top:1px dashed var(--line);padding:11px 0}
+.task:first-child{border-top:none}
+.task-row{display:flex;align-items:flex-start;gap:11px}
+.box{
+  flex:none;width:24px;height:24px;margin-top:1px;border-radius:7px;
+  border:2px solid var(--green);background:var(--card);cursor:pointer;
+  display:grid;place-items:center;transition:background .15s;padding:0;
+}
+.box:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.box svg{opacity:0;transform:scale(.5);transition:all .18s;color:#fff}
+.task.checked .box{background:var(--green)}
+.task.checked .box svg{opacity:1;transform:scale(1)}
+.task-label{flex:1;cursor:pointer;user-select:none}
+.task.checked .task-label{color:var(--ink-soft);text-decoration:line-through;text-decoration-color:var(--green);text-decoration-thickness:1.5px}
+.task-label b{font-weight:600}
+.note-btn{
+  flex:none;background:none;border:none;cursor:pointer;color:var(--ink-soft);
+  width:28px;height:28px;border-radius:8px;display:grid;place-items:center;
+}
+.note-btn:hover{background:var(--sand)}
+.note-btn:focus-visible{outline:2px solid var(--green)}
+.note-btn.has-note{color:var(--amber)}
+.tip{
+  margin:6px 0 0 35px;font-size:13px;color:var(--ink-soft);
+  border-left:2.5px solid var(--amber);padding-left:9px;
+}
+.tip b{color:var(--ink)}
+.linkrow{margin:7px 0 0 35px;display:flex;flex-wrap:wrap;gap:6px}
+.linkchip{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:'IBM Plex Mono',monospace;font-size:11.5px;text-decoration:none;
+  border:1.5px solid var(--green);color:var(--green);border-radius:99px;
+  padding:3px 11px;background:var(--card);
+}
+.linkchip:active{background:var(--green);color:#fff}
+.note-area{display:none;margin:9px 0 2px 35px}
+.task.note-open .note-area{display:block}
+textarea{
+  width:100%;min-height:64px;resize:vertical;
+  border:1.5px solid var(--line);border-radius:10px;padding:9px 11px;
+  font-family:'IBM Plex Sans',sans-serif;font-size:14px;color:var(--ink);
+  background:var(--sand);
+}
+textarea:focus{outline:2px solid var(--green);border-color:var(--green)}
+textarea::placeholder{color:#9AA79F}
+
+/* ---------- field notes ---------- */
+.fieldnotes{
+  background:var(--card);border:1.5px solid var(--line);border-radius:16px;
+  padding:18px 16px 8px;margin:24px 0 16px;
+}
+.fn-head{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.fn-head svg{flex:none}
+.fieldnotes h2{font-family:'Space Grotesk',sans-serif;font-size:19px}
+.fn-sub{font-size:13px;color:var(--ink-soft);margin-bottom:14px}
+.fn-card{border-top:1px dashed var(--line);padding:13px 0}
+.fn-card h3{
+  font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px;margin-bottom:5px;
+}
+.fn-card p,.fn-card li{font-size:13.8px;color:#3D4C43}
+.fn-card ul{margin:4px 0 0 20px}
+.fn-card li{margin-bottom:4px}
+.fn-card code{
+  font-family:'IBM Plex Mono',monospace;font-size:12.5px;background:var(--sand);
+  padding:1px 6px;border-radius:6px;
+}
+.copybox{
+  margin-top:9px;background:var(--sand);border:1.5px solid var(--line);border-radius:12px;
+  padding:11px 12px;
+}
+.copybox pre{
+  white-space:pre-wrap;font-family:'IBM Plex Mono',monospace;font-size:12px;
+  color:var(--ink);max-height:180px;overflow:auto;
+}
+.copy-btn{
+  margin-top:9px;border:none;background:var(--green);color:#fff;cursor:pointer;
+  font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;font-weight:600;
+  border-radius:99px;padding:7px 16px;
+}
+.copy-btn:active{background:var(--green-deep)}
+.skipnote{
+  background:#FBEFE8;border:1.5px solid var(--danger);border-radius:12px;
+  padding:10px 13px;font-size:13.5px;color:#7A3A22;margin:13px 0;
+}
+
+/* ---------- rules + scratchpad ---------- */
+.rules{
+  background:var(--ink);color:var(--sand);border-radius:16px;
+  padding:18px 18px 16px;margin:0 0 16px;
+}
+.rules .eyebrow{color:var(--amber)}
+.rules ol{margin:8px 0 0 18px}
+.rules li{margin-bottom:7px}
+.rules li:last-child{margin-bottom:0}
+.scratch{
+  background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:16px;
+}
+.scratch h2{font-family:'Space Grotesk',sans-serif;font-size:17px;margin-bottom:2px}
+.scratch p{font-size:13px;color:var(--ink-soft);margin-bottom:9px}
+.err{
+  display:none;margin-bottom:14px;background:#FBEFE8;border:1.5px solid var(--danger);
+  color:var(--danger);border-radius:12px;padding:10px 14px;font-size:13.5px;
+}
+.err.show{display:block}
+
+/* confetti */
+.confetti{position:fixed;top:-10px;width:9px;height:14px;z-index:50;pointer-events:none;border-radius:2px}
+@keyframes fall{to{transform:translateY(105vh) rotate(560deg)}}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="err" id="err"></div>
+
+  <header>
+    <div class="mark">Flavbest · Launch mission</div>
+    <h1>30 days.<br>Hands <em>dirty.</em></h1>
+    <div class="window">
+      <span>AUG 24 → SEP 25</span>
+      <span class="chip" id="daysLeft">— days left</span>
+    </div>
+    <div class="progress-shell">
+      <div class="progress-track"><div class="progress-fill" id="fill"></div></div>
+      <div class="progress-meta">
+        <span id="count">0 / 0 done</span>
+        <span class="saved" id="saved">Saved ✓</span>
+      </div>
+    </div>
+  </header>
+
+  <svg class="dunes" viewBox="0 0 640 70" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M0 55 Q120 15 250 45 T520 40 T640 50 V70 H0 Z" fill="#E3D9C4"/>
+    <path d="M0 62 Q160 35 320 55 T640 58 V70 H0 Z" fill="#D8CDB8"/>
+    <circle cx="558" cy="18" r="11" fill="#DFA032"/>
+    <path d="M92 52 l4 -14 l4 14 M96 38 v14" stroke="#176B3A" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <path d="M96 38 q-7 -6 -12 -3 M96 38 q7 -6 12 -3 M96 38 q0 -9 -5 -12 M96 38 q0 -9 5 -12" stroke="#176B3A" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  </svg>
+
+  <main id="weeks"></main>
+
+  <section class="fieldnotes">
+    <div class="fn-head">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#176B3A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>
+      <h2>Field notes — stolen tactics</h2>
+    </div>
+    <p class="fn-sub">The useful parts extracted from other sellers' playbooks. No wheel reinvented.</p>
+
+    <div class="fn-card">
+      <h3>🔎 Demand-proof searches (free spy tools)</h3>
+      <ul>
+        <li><b>Facebook Ad Library:</b> country = United States, search <code>50% off free shipping</code>. An ad running 30+ days with many versions = the product is making money.</li>
+        <li><b>TikTok search:</b> <code>#tiktokmademebuyit</code>, <code>wait for it</code>, <code>you need this</code> — filter <b>This Week</b> + <b>Most Liked</b>.</li>
+        <li><b>Your KSA edge:</b> proven in the US + not yet pushed in Saudi = your opening.</li>
+      </ul>
+      <div class="linkrow" style="margin-left:0">
+        <a class="linkchip" href="https://www.facebook.com/ads/library" target="_blank" rel="noopener">FB Ad Library ↗</a>
+        <a class="linkchip" href="https://ads.tiktok.com/business/creativecenter/inspiration/topads/pc/en" target="_blank" rel="noopener">TikTok Top Ads ↗</a>
+      </div>
+    </div>
+
+    <div class="fn-card">
+      <h3>🏆 The 6 filters of a product worth testing</h3>
+      <ul>
+        <li>Solves a real problem or a clear desire (not "cool")</li>
+        <li>Evergreen — sells all year, not one season</li>
+        <li>Easy to film, with a visible "wow" moment in 2 seconds</li>
+        <li>Margin ≥ SAR 100 per unit after product + shipping</li>
+        <li>Few stores already pushing it in KSA (search TikTok in Arabic to check)</li>
+        <li>Small, light, no batteries/liquids/kids items (your customs rule)</li>
+      </ul>
+    </div>
+
+    <div class="fn-card">
+      <h3>📢 Ad rules from people who spend real money</h3>
+      <ul>
+        <li><b>Broad targeting, always.</b> No narrow interests — the creative does the targeting, the algorithm finds the buyer.</li>
+        <li><b>The creative is 90% of results.</b> Settings and hacks are 10%.</li>
+        <li><b>Volume wins:</b> a real test = many variations. Aim for 4 angles × 5 hooks over time, not one video.</li>
+        <li><b>Don't starve an ad set.</b> Under ~SAR 75/day per ad set teaches the algorithm nothing.</li>
+      </ul>
+    </div>
+
+    <div class="fn-card">
+      <h3>🤖 AI product-research prompt (paste into Claude)</h3>
+      <p>Run this weekly. It thinks from pain points backward to products — better than browsing bestseller lists.</p>
+      <div class="copybox"><pre id="prompt1">You are my product research engine for the Saudi e-commerce market.
+
+Think from pain backward to product:
+1. List 10 daily frustrations felt by people in Saudi Arabia across: home, beauty, pets, health, parents, car owners, office workers, hosting guests.
+2. For each frustration, propose ONE physical product (available on Alibaba) that solves it instantly.
+3. Only include products that are: emotionally painful problems, clear before/after, filmable wow moment, price SAR 80-300, margin over SAR 100, small and light, no batteries or liquids, and NOT already saturated on Saudi TikTok.
+
+For each product give: name, the exact pain it solves, why it can win in KSA specifically, 3 video hook ideas in Arabic, estimated cost vs selling price, saturation score 1-10.
+
+Finish with: your top 3 picks ranked, and a 20-second TikTok script in Saudi dialect for pick #1.</pre>
+      <button class="copy-btn" data-copy="prompt1">Copy prompt</button></div>
+    </div>
+
+    <div class="fn-card">
+      <h3>⚡ Store discipline</h3>
+      <ul>
+        <li>Fewer apps = faster store = more sales. Install only: reviews, order tracking, abandoned-cart WhatsApp.</li>
+        <li>Logo in 20 minutes on Canva. The logo never sold anything.</li>
+        <li>Never ship to customers directly from AliExpress — 3+ week delivery kills a Saudi store. Local stock or DDP bulk only.</li>
+      </ul>
+    </div>
+
+    <div class="skipnote">
+      <b>Ignore from that guide:</b> the US LLC + Shopify Payments path (that's for selling to Americans — you sell in KSA on Salla), their "recommended" supplier and theme links (all affiliate commissions), and the $97/month community. The free tactics above are the whole value. Confirmed again: Shopify Payments is still not available in Saudi Arabia — nothing changed.
+    </div>
+  </section>
+
+  <section class="rules">
+    <div class="eyebrow">Rules of the month</div>
+    <ol>
+      <li>Every day has one action. No action = the plan is dying.</li>
+      <li>No new tools, no research rabbit holes after Day 7. You have everything.</li>
+      <li>"It's not perfect" is not a blocker. Ugly store + real orders beats beautiful store + zero.</li>
+    </ol>
+  </section>
+
+  <section class="scratch">
+    <h2>Scratchpad</h2>
+    <p>Supplier names, prices, ideas — anything you don't want to lose.</p>
+    <textarea id="scratch" placeholder="Write anything…"></textarea>
+  </section>
+
+  <section class="scratch" style="margin-top:16px">
+    <h2>Sync between devices</h2>
+    <p>Progress saves automatically on each device. To move it (phone → PC or the other way): copy the code here, paste it on the other device, load.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px">
+      <button class="copy-btn" id="syncCopy">Copy sync code</button>
+      <button class="copy-btn" id="syncLoad" style="background:var(--amber)">Load sync code</button>
+    </div>
+    <textarea id="syncIn" style="min-height:52px" placeholder="Paste a sync code from your other device here…"></textarea>
+  </section>
+</div>
+
+<script>
+const PLAN=[
+ {id:"w1",week:"Week 1",dates:"Aug 24–30",name:"Paperwork, accounts, shortlist",tasks:[
+  {id:"w1a",t:"<b>Freelance doc:</b> get وثيقة العمل الحر from freelance.sa (~10 min, free)",
+   links:[["https://freelance.sa","freelance.sa"]],tip:"Valid 1 year — set a renewal reminder now."},
+  {id:"w1b",t:"<b>Maroof:</b> register your store with the document",
+   links:[["https://maroof.sa","maroof.sa"]],tip:"Use the freelance doc — no CR needed at this stage."},
+  {id:"w1c",t:"<b>Salla:</b> open store on free plan, link the document",
+   links:[["https://salla.sa","salla.sa"]],tip:"Basic plan: free, unlimited products, no commission."},
+  {id:"w1d",t:"<b>Handles:</b> reserve same name on TikTok, Snapchat, Instagram (business) + WhatsApp Business",
+   tip:"Set all to Business account type — unlocks inbox, analytics, and ads later."},
+  {id:"w1e",t:"<b>Tools:</b> register Metricool (scheduling). Nothing else.",
+   links:[["https://metricool.com","metricool.com"]],tip:"Alt: Buffer. Every extra tool this month is a distraction, not an asset."},
+  {id:"w1f",t:"<b>Bank:</b> open a separate account just for business money",
+   tip:"Any digital bank, opens in a day. Clean numbers from order #1."},
+  {id:"w1g",t:"<b>Radar:</b> TikTok Creative Center → filter KSA → note 10 products with heavy ad activity",
+   links:[["https://ads.tiktok.com/business/creativecenter/inspiration/topads/pc/en","Creative Center"]],tip:"Almost nobody filters for Saudi Arabia. That filter is your edge."},
+  {id:"w1k",t:"<b>Demand proof:</b> FB Ad Library — search “50% off free shipping” (US) for your candidates",
+   links:[["https://www.facebook.com/ads/library","Ad Library"]],tip:"Ad running 30+ days with many versions = product prints money somewhere."},
+  {id:"w1h",t:"<b>Cross-check:</b> Google Trends (KSA) on each — cut flat or dying ones",
+   links:[["https://trends.google.com/trends/?geo=SA","Trends (KSA)"]],tip:"High TikTok buzz + flat Trends = novelty, not demand."},
+  {id:"w1i",t:"<b>Ask 10 people</b> from your target group what they bought / hated recently",
+   tip:"Ask “what did you buy last month, what annoyed you?” — never “would you buy this?”"},
+  {id:"w1j",t:"<b>Shortlist 3 products</b> passing the 6 filters (see Field notes below)",
+   tip:"SAR 80–300 price, margin ≥ SAR 100, filmable wow, evergreen, light, low KSA saturation."}
+ ]},
+ {id:"w2",week:"Week 2",dates:"Aug 31 – Sep 6",name:"Samples ordered, store built",tasks:[
+  {id:"w2a",t:"<b>Alibaba:</b> filter Verified Supplier + Trade Assurance + 4.5★ + fast replies",
+   links:[["https://www.alibaba.com","alibaba.com"]],tip:"Alt: wholesale districts in Riyadh/Jeddah — zero customs, stock this week, see quality with your hands."},
+  {id:"w2b",t:"<b>Message 5 suppliers per product</b> (15 total)",
+   tip:"Ask: sample cost via DHL/FedEx express to Riyadh + unit price at 100/300/500 with DDP shipping."},
+  {id:"w2c",t:"<b>Order samples</b> from the 2 best repliers per product — express air",
+   tip:"5–10 days by air. Pay whatever express costs — speed is the point this month."},
+  {id:"w2d",t:"<b>Store shell:</b> Arabic policies, mada + Apple Pay + Tabby + COD on, Aramex/SMSA connected",
+   tip:"All toggles inside Salla dashboard — no coding. COD still matters for first-time trust."},
+  {id:"w2e",t:"<b>Landing pages:</b> fill the template for all 3 products",
+   tip:"Use the salla-product-page template file. Send Claude the 10-people answers for real Arabic copy."},
+  {id:"w2f",t:"<b>Warm the account:</b> post something daily on TikTok",
+   tip:"Journey, niche observations, behind-the-scenes. Warming ≠ selling."}
+ ]},
+ {id:"w3",week:"Week 3",dates:"Sep 7–13",name:"Samples in hand, content sprint",tasks:[
+  {id:"w3a",t:"<b>Judge samples with your hands.</b> Bad quality = that product dies today",
+   tip:"No mercy. A weak product wastes weeks of content and ads downstream."},
+  {id:"w3b",t:"<b>Film 5–7 videos per surviving product</b> in one sitting",
+   tip:"Formula: hook (1 sec) → problem → product in action → result. Vertical, phone camera is enough."},
+  {id:"w3c",t:"<b>Schedule via Metricool:</b> 2 posts/day across TikTok + Snap",
+   links:[["https://metricool.com","metricool.com"]],tip:"One Sunday sitting covers the whole week."},
+  {id:"w3d",t:"<b>Watch one number:</b> which product pulls comments, DMs, saves",
+   tip:"Saves and “كم سعره؟” DMs are the strongest buying signals."}
+ ]},
+ {id:"w4",week:"Week 4",dates:"Sep 14–20",name:"Money test",tasks:[
+  {id:"w4a",t:"<b>Winner's page goes live</b> on Salla",
+   tip:"Only the winner. The other two wait."},
+  {id:"w4b",t:"<b>SAR 1,000–1,500 ads:</b> TikTok + Snap on top videos",
+   links:[["https://ads.tiktok.com","TikTok Ads"],["https://ads.snapchat.com","Snap Ads"]],tip:"Broad targeting, no interests. Min ~SAR 75/day per ad set, 3–5 creatives inside, let it pick the winner."},
+  {id:"w4c",t:"<b>Sell:</b> sample stock + pre-orders, or order 100–300 units DDP once orders prove real",
+   tip:"“Ships in 2 weeks” is fine if said honestly on the page."},
+  {id:"w4d",t:"<b>Answer every DM within the hour</b> — this is the week that decides",
+   tip:"Log every question — it becomes your FAQ and your next ad angles."}
+ ]},
+ {id:"w5",week:"Decide",dates:"Sep 21–25",name:"Kill or scale",tasks:[
+  {id:"w5a",t:"<b>Orders came?</b> Reorder inventory, double the winning ad, kill the other 2 products",
+   tip:"Scale the ad that won — don't “refresh” a working creative."},
+  {id:"w5b",t:"<b>No orders after ~SAR 1,500 + 15 videos?</b> Product dies, not the system",
+   tip:"Store, accounts, supplier chats, template — all reusable. Next 3 candidates start at week-2 speed."},
+  {id:"w5c",t:"<b>Log the lessons</b> in the scratchpad",
+   tip:"What worked, what you'd change, which hooks pulled. This is the real asset."}
+ ]}
+];
+
+const KEY="launch30-v1";
+let state={tasks:{},open:{w1:true},scratch:""};
+let saveTimer=null;
+
+const $=s=>document.querySelector(s);
+const CHECK='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+const NOTE='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
+const CARET='<svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>';
+
+function render(){
+  const root=$("#weeks");root.innerHTML="";
+  PLAN.forEach(w=>{
+    const sec=document.createElement("section");
+    sec.className="week"+(state.open[w.id]?" open":"");
+    const done=w.tasks.filter(t=>state.tasks[t.id]?.done).length;
+    const pct=Math.round(done/w.tasks.length*100);
+    if(pct===100)sec.classList.add("done");
+    sec.innerHTML=`
+      <div class="stamp">تم ✓<small>shipped</small></div>
+      <button class="week-head" data-week="${w.id}" aria-expanded="${!!state.open[w.id]}">
+        <div class="dial" style="--p:${pct}"><span>${done}/${w.tasks.length}</span></div>
+        <div class="week-titles">
+          <div class="eyebrow">${w.week} · ${w.dates}</div>
+          <div class="week-name">${w.name}</div>
+        </div>
+        ${CARET}
+      </button>
+      <div class="week-body">
+        ${w.tasks.map(t=>{
+          const st=state.tasks[t.id]||{};
+          const links=(t.links||[]).map(l=>`<a class="linkchip" href="${l[0]}" target="_blank" rel="noopener">${l[1]} ↗</a>`).join("");
+          return `<div class="task ${st.done?"checked":""} ${st.noteOpen?"note-open":""}" data-task="${t.id}">
+            <div class="task-row">
+              <button class="box" data-check="${t.id}" role="checkbox" aria-checked="${!!st.done}" aria-label="Mark done">${CHECK}</button>
+              <div class="task-label" data-checklabel="${t.id}">${t.t}</div>
+              <button class="note-btn ${st.note?"has-note":""}" data-note="${t.id}" aria-label="Add note">${NOTE}</button>
+            </div>
+            ${t.tip?`<div class="tip">💡 ${t.tip}</div>`:""}
+            ${links?`<div class="linkrow">${links}</div>`:""}
+            <div class="note-area">
+              <textarea data-notetext="${t.id}" placeholder="Note for this step…">${st.note||""}</textarea>
+            </div>
+          </div>`;
+        }).join("")}
+      </div>`;
+    root.appendChild(sec);
+  });
+  updateHeader();
+}
+
+function updateHeader(){
+  const all=PLAN.flatMap(w=>w.tasks);
+  const done=all.filter(t=>state.tasks[t.id]?.done).length;
+  $("#fill").style.width=(done/all.length*100)+"%";
+  $("#count").textContent=`${done} / ${all.length} done`;
+}
+
+function daysLeft(){
+  const end=new Date("2026-09-25T23:59:59");
+  const d=Math.max(0,Math.ceil((end-new Date())/86400000));
+  $("#daysLeft").textContent=d>0?`${d} days left`:"window closed — ship anyway";
+}
+
+function scheduleSave(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(save,500);
+}
+function hasClaudeStorage(){
+  return typeof window!=="undefined"&&window.storage&&typeof window.storage.set==="function";
+}
+function banner(msg){const el=$("#err");el.textContent=msg;el.classList.add("show");}
+async function storeSet(k,v){
+  if(hasClaudeStorage()){
+    try{const r=await window.storage.set(k,v);if(r)return"claude";}catch(e){}
+  }
+  try{localStorage.setItem(k,v);return"browser";}catch(e){}
+  return null;
+}
+async function storeGet(k){
+  if(hasClaudeStorage()){
+    try{const r=await window.storage.get(k);if(r&&r.value)return r.value;}catch(e){}
+  }
+  try{return localStorage.getItem(k);}catch(e){}
+  return null;
+}
+async function save(retrying){
+  const mode=await storeSet(KEY,JSON.stringify(state));
+  if(mode){
+    $("#err").classList.remove("show");
+    const s=$("#saved");s.classList.add("show");setTimeout(()=>s.classList.remove("show"),1200);
+  }else{
+    if(!retrying){setTimeout(()=>save(true),900);return;}
+    banner("This viewer blocks saving. Your checks work this session but won't survive closing. Use “Copy sync code” below to keep your progress, or open the file in a normal browser (Chrome/Safari).");
+  }
+}
+async function load(){
+  try{
+    const v=await storeGet(KEY);
+    if(v)state={...state,...JSON.parse(v)};
+  }catch(e){/* first visit — nothing saved yet */}
+}
+
+/* ---- sync between devices ---- */
+function encodeState(){return btoa(unescape(encodeURIComponent(JSON.stringify(state))));}
+function decodeState(code){return JSON.parse(decodeURIComponent(escape(atob(code.trim()))));}
+async function copySync(btn){
+  const code=encodeState();
+  try{await navigator.clipboard.writeText(code);btn.textContent="Copied ✓";}
+  catch(e){$("#syncIn").value=code;btn.textContent="Code shown below — copy it";}
+  setTimeout(()=>btn.textContent="Copy sync code",2000);
+}
+async function loadSync(btn){
+  const code=$("#syncIn").value;
+  if(!code.trim()){btn.textContent="Paste a code first";setTimeout(()=>btn.textContent="Load sync code",1800);return;}
+  try{
+    state={...state,...decodeState(code)};
+    $("#syncIn").value="";render();$("#scratch").value=state.scratch||"";
+    await save();btn.textContent="Loaded ✓";
+  }catch(e){btn.textContent="Invalid code";}
+  setTimeout(()=>btn.textContent="Load sync code",2000);
+}
+
+function confetti(){
+  if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+  const colors=["#176B3A","#DFA032","#1C2B24","#B0512F"];
+  for(let i=0;i<26;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=colors[i%colors.length];
+    c.style.animation=`fall ${1.6+Math.random()*1.4}s linear forwards`;
+    c.style.animationDelay=Math.random()*.4+"s";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),3600);
+  }
+}
+
+document.addEventListener("click",e=>{
+  const cp=e.target.closest("[data-copy]");
+  if(cp){
+    const txt=document.getElementById(cp.dataset.copy).textContent;
+    (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(
+      ()=>{cp.textContent="Copied ✓";setTimeout(()=>cp.textContent="Copy prompt",1500);},
+      ()=>{const r=document.createRange();r.selectNodeContents(document.getElementById(cp.dataset.copy));const s=getSelection();s.removeAllRanges();s.addRange(r);cp.textContent="Select + copy manually";}
+    );
+    return;
+  }
+  if(e.target.closest("a"))return;
+  const head=e.target.closest("[data-week]");
+  if(head){
+    const id=head.dataset.week;
+    state.open[id]=!state.open[id];
+    render();scheduleSave();return;
+  }
+  const check=e.target.closest("[data-check]")||e.target.closest("[data-checklabel]");
+  if(check){
+    const id=check.dataset.check||check.dataset.checklabel;
+    const st=state.tasks[id]||(state.tasks[id]={});
+    st.done=!st.done;
+    const wk=PLAN.find(w=>w.tasks.some(t=>t.id===id));
+    const wasDone=wk.tasks.every(t=>state.tasks[t.id]?.done);
+    render();scheduleSave();
+    if(st.done&&wasDone)confetti();
+    return;
+  }
+  const nb=e.target.closest("[data-note]");
+  if(nb){
+    const id=nb.dataset.note;
+    const st=state.tasks[id]||(state.tasks[id]={});
+    st.noteOpen=!st.noteOpen;
+    render();
+    if(st.noteOpen){const ta=document.querySelector(`[data-notetext="${id}"]`);ta&&ta.focus();}
+    scheduleSave();
+  }
+});
+
+document.addEventListener("input",e=>{
+  if(e.target.matches("[data-notetext]")){
+    const id=e.target.dataset.notetext;
+    (state.tasks[id]||(state.tasks[id]={})).note=e.target.value;
+    const btn=document.querySelector(`[data-note="${id}"]`);
+    btn&&btn.classList.toggle("has-note",!!e.target.value.trim());
+    scheduleSave();
+  }
+  if(e.target.id==="scratch"){state.scratch=e.target.value;scheduleSave();}
+});
+
+(async function init(){
+  await load();
+  render();
+  $("#scratch").value=state.scratch||"";
+  daysLeft();
+  $("#syncCopy").addEventListener("click",e=>copySync(e.target));
+  $("#syncLoad").addEventListener("click",e=>loadSync(e.target));
+})();
+</script>
+</body>
+</html>
