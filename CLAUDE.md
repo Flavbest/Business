@@ -10,7 +10,7 @@ Flavbest — Saudi citizen launching an e-commerce business. Not purely money-dr
 
 ## The mission
 
-Launch a real e-commerce store for the **Saudi market** within a 30-day window: **Aug 24 → Sep 25, 2026**. Test one product with real ads and real orders. Kill or scale by Sep 25.
+Launch a real e-commerce store for the **Saudi market** within a 30-day window: **Sep 1 → Oct 3, 2026**. Test one product with real ads and real orders. Kill or scale by Oct 3.
 
 ## Decisions already made (do not reopen these)
 
@@ -36,6 +36,7 @@ Launch a real e-commerce store for the **Saudi market** within a 30-day window: 
 
 - Infrastructure done: repo public, Pages live, checklist deployed.
 - Week 1 tasks mostly NOT done yet: freelance document, Maroof, Salla store, social handles (TikTok/Snap/IG/WhatsApp Business, same name), Metricool, bank account, product radar (TikTok Creative Center filtered to KSA + FB Ad Library + Google Trends KSA), ask 10 people, shortlist 3 products.
+- **Window moved (decided Aug 26, 2026):** the launch window was Aug 24 → Sep 25; Flavbest chose to start Sep 1 instead. Blocks are now Week 1 `Sep 1–7`, Week 2 `Sep 8–14`, Week 3 `Sep 15–21`, Week 4 `Sep 22–28`, Decide `Sep 29 – Oct 3`. Do not reopen; the checklist and this file agree.
 - Priority: get Flavbest OFF infrastructure and INTO Week 1 execution. If he asks for more tooling before Week 1 boxes are checked, remind him of Rule 2 below.
 
 ## Rules of the month (enforce these)
