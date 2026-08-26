@@ -35,9 +35,22 @@ Launch a real e-commerce store for the **Saudi market** within a 30-day window: 
 ## Current state (as of Aug 26, 2026)
 
 - Infrastructure done: repo public, Pages live, checklist deployed.
-- Week 1 tasks mostly NOT done yet: freelance document, Maroof, Salla store, social handles (TikTok/Snap/IG/WhatsApp Business, same name), Metricool, bank account, product radar (TikTok Creative Center filtered to KSA + FB Ad Library + Google Trends KSA), ask 10 people, shortlist 3 products.
+- Week 1 tasks NOT done yet (13 of them, in this order): Salla store, freelance document, Maroof, house name, social handles (TikTok/Snap/IG/WhatsApp Business, same name), brand kit, Metricool, bank account, product radar (TikTok Creative Center filtered to KSA + FB Ad Library + Google Trends KSA), ask 10 people, shortlist 3 products. 30 tasks total.
 - **Window moved (decided Aug 26, 2026):** the launch window was Aug 24 → Sep 25; Flavbest chose to start Sep 1 instead. Blocks are now Week 1 `Sep 1–7`, Week 2 `Sep 8–14`, Week 3 `Sep 15–21`, Week 4 `Sep 22–28`, Decide `Sep 29 – Oct 3`. Do not reopen; the checklist and this file agree.
 - Priority: get Flavbest OFF infrastructure and INTO Week 1 execution. If he asks for more tooling before Week 1 boxes are checked, remind him of Rule 2 below.
+
+## Branding (decided Aug 26, 2026)
+
+**One house brand, not one brand per product.** Flavbest doesn't know what he's selling yet, so a brand per candidate is 3x the work to throw 2 away. Pick ONE neutral parent name tied to no product category — it survives all three tests and every pivot. Each product gets a product *name* and a landing page, never its own identity.
+
+- Name must work in Arabic AND Latin. Most AI logo generators mangle Arabic script — check the render before committing.
+- Tools: Namelix (names, free) + Canva (logo, brand kit, social pack, free). Arabic fonts: Tajawal, Cairo, IBM Plex Sans Arabic.
+- Do NOT buy Looka / Brandmark / Tailor Brands. Per-brand pricing, weak Arabic output.
+- Never use AI-generated images of the actual product. Photograph and film the real sample — a mismatch between the ad and what arrives drives returns and bad reviews, which kills a new KSA store faster than a plain logo ever would.
+
+## Paperwork note — the website field
+
+The freelance document (وثيقة العمل الحر) requires: Saudi national 18+, Absher/Nafath, a specialization from their list, and proof of practising the profession (certificates or work samples). **A website is not in the requirements.** If a website/portfolio field blocks him, the answer is to open the free Salla store FIRST — it needs no document and its subdomain is a real business URL. That is why `w1c` now precedes `w1a`. Never put a URL that does not exist on a government form.
 
 ## Rules of the month (enforce these)
 
