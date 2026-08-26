@@ -19,7 +19,7 @@ Launch a real e-commerce store for the **Saudi market** within a 30-day window: 
 | Platform | **Salla** (salla.sa) | KSA-native: mada, Apple Pay, Tabby/Tamara, COD, SAR settlement. Has full REST API + webhooks for automation later. |
 | NOT Shopify | ruled out | Shopify Payments unavailable in KSA; needs 3rd-party gateway + extra fees. |
 | NOT Amboras | ruled out | Stripe-only payments; Stripe doesn't onboard Saudi merchants. |
-| Legal | **وثيقة العمل الحر** (freelance.sa) + **Maroof** | Free, no CR needed at this stage. |
+| Legal | **وثيقة العمل الحر** (freelance.sa) + store verification on **منصة الأعمال / business.sa** | Free, no CR needed. **Maroof is dead for e-stores** — the Ministry of Commerce moved verification to the Saudi Business Center. business.sa also requires a commercial bank account for the store. |
 | Model | Buy & resell first, own product later | Test demand cheap before manufacturing. |
 | Testing | **Sequential** — one product live at a time, 3 candidates per cycle | One-person team. Lab store + max one winner. Never 5 brands in parallel. |
 | Sourcing | Alibaba samples via express air (DDP later) or Riyadh/Jeddah wholesale | Never dropship from AliExpress direct to customers (3-week delivery kills KSA stores). |
@@ -35,7 +35,8 @@ Launch a real e-commerce store for the **Saudi market** within a 30-day window: 
 ## Current state (as of Aug 26, 2026)
 
 - Infrastructure done: repo public, Pages live, checklist deployed.
-- Week 1 tasks NOT done yet (13 of them, in this order): Salla store, freelance document, Maroof, house name, social handles (TikTok/Snap/IG/WhatsApp Business, same name), brand kit, Metricool, bank account, product radar (TikTok Creative Center filtered to KSA + FB Ad Library + Google Trends KSA), ask 10 people, shortlist 3 products. 30 tasks total.
+- Week 1 tasks NOT done yet (13, in this order): Salla store → freelance document → **commercial bank account** → **business.sa verification** → house name → social handles (TikTok/Snap/IG/WhatsApp Business, same name) → brand kit → Metricool → product radar (TikTok Creative Center filtered to KSA + FB Ad Library + Google Trends KSA) → ask 10 people → shortlist 3 products. 30 tasks total.
+- **Corrected Aug 26, 2026:** this file said "Maroof" and that was stale — the Ministry of Commerce moved e-store verification to منصة الأعمال (business.sa) back in **March 2023**. Flavbest caught it. The bank account moved ahead of verification because business.sa requires one; it is a dependency now, not housekeeping. **Verify KSA government process against the source before repeating what this file says** — it has been wrong once.
 - **Window moved (decided Aug 26, 2026):** the launch window was Aug 24 → Sep 25; Flavbest chose to start Sep 1 instead. Blocks are now Week 1 `Sep 1–7`, Week 2 `Sep 8–14`, Week 3 `Sep 15–21`, Week 4 `Sep 22–28`, Decide `Sep 29 – Oct 3`. Do not reopen; the checklist and this file agree.
 - Priority: get Flavbest OFF infrastructure and INTO Week 1 execution. If he asks for more tooling before Week 1 boxes are checked, remind him of Rule 2 below.
 
