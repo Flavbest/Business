@@ -29,11 +29,10 @@ Launch a real e-commerce store for the **Saudi market** within a 30-day window: 
 ## This repo
 
 - `Checklist.html` — **GENERATED, do not hand-edit.** Public reference copy of the checklist, live at https://flavbest.github.io/Business/Checklist.html via GitHub Pages (main branch, root).
-- **The source of truth is the Claude artifact**, whose source lives at `F:\AI\Business
-otes\checklist-artifact.html` (outside this repo, private). It saves progress into the page itself so phone and PC stay in step.
+- **The source of truth is the Claude artifact**, whose source lives at `F:\AI\Business\notes\checklist-artifact.html` (outside this repo, private). It saves progress into the page itself so phone and PC stay in step.
 - `build-checklist.py` regenerates `Checklist.html` from that source. It empties the state block first — **progress and the scratchpad (supplier names, prices, margins) must never be committed to this public repo.** Edit the artifact source, run the script, commit.
-- Progress/notes are stored in each device's browser (window.storage in Claude viewer, localStorage elsewhere) + a sync-code system. **The file contains no user data. Never add any personal/sensitive data to this repo — it is public, and must stay public or the live site dies.**
-- Editing rules: keep the storage key `launch30-v1` and existing task IDs (w1a…w5c) stable or saved progress breaks. Keep `color-scheme: light only` (dark-mode viewers blacked out the page before). Test JS syntax before pushing.
+- **The file in this repo contains no user data, and must not.** Never add anything personal or sensitive here — the repo is public, and must stay public or the live site dies. Opened outside a Claude viewer the generated copy falls back to `localStorage` plus the sync-code box, which is why it carries a banner saying it does not save.
+- Editing rules: keep the storage key `launch30-v1` and existing task IDs (w1a…w1m, w2a…w5c) stable or saved progress breaks. Keep `color-scheme: light only` (dark-mode viewers blacked out the page before). Test JS syntax before pushing.
 
 ## Current state (as of Aug 26, 2026)
 
